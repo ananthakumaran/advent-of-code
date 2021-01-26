@@ -3,6 +3,8 @@
 :- use_module(library(dcg/basics)).
 :- use_module(library(yall)).
 :- use_module(library(apply)).
+:- use_module(library(aggregate)).
+
 
 multiplier(1) --> "gain".
 multiplier(-1) --> "lose".
@@ -43,8 +45,7 @@ solve(File, X) :-
     maplist(assertz, Preferences),
     foldl([likes(X, Y, _), In, [X,Y|In]]>>true,Preferences, [], NameDuplicates),
     list_to_ord_set(NameDuplicates, Names),
-    findall(Score, gen(Names, Score), Scores, []),
-    max_member(X, Scores).
+    aggregate_all(max(Score), gen(Names, Score), X).
 
 %?- solve('13a.input', X).
 %@ X = 733 ;
