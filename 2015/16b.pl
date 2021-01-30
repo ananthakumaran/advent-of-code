@@ -1,0 +1,46 @@
+%-*- mode:prolog -*-
+
+:- use_module(library(dcg/basics)).
+:- use_module(library(record)).
+:- use_module(library(clpfd)).
+
+:- record sue(n:integer,
+              children: integer,
+              cats: integer,
+              samoyeds: integer,
+              pomeranians: integer,
+              akitas: integer,
+              vizslas: integer,
+              goldfish: integer,
+              trees: integer,
+              cars: integer,
+              perfumes: integer).
+
+object(Record, Record) --> "\n", !.
+object(Record0, Out) -->
+    string(C), { atom_codes(Name, C) },
+    ": ",
+    integer(N), { Field =.. [Name, N], set_sue_field(Field, Record0, Record1) },
+    (", " | ""),
+    object(Record1, Out).
+
+line([]) --> eos.
+line([Record2 | Xs]) -->
+    "Sue ",
+    integer(N), { default_sue(Record0), set_sue_field(n(N), Record0, Record1) },
+    ": ",
+    object(Record1, Record2),
+    !, line(Xs).
+
+solve(File, X) :-
+    phrase_from_file(line(Sues), File),
+    member(X, Sues).
+
+%?- Cats #> 7, Trees #> 3, Pomeranians #< 3, GoldFish #< 5, solve('16a.input', sue(X, 3, Cats, 2, Pomeranians, 0, 0, GoldFish, Trees, 2, 1)).
+%@ Trees = 6,
+%@ GoldFish = 0,
+%@ X = 323,
+%@ Cats in 8..sup,
+%@ Pomeranians in inf..2 ;
+%@ false.
+
