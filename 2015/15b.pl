@@ -44,7 +44,7 @@ score(Ingredients, Xs, Out) :-
 solve(File, X) :-
     phrase_from_file(line(Ingredients), File),
     length(Ingredients, Length),
-    aggregate_all(max(Score), (gen(Length, 0, 100, Xs), score(Ingredients, Xs, Score)), X).
+    aggregate_all(max(Score), (gen(Length, 100, Xs), score(Ingredients, Xs, Score)), X).
 
 %?- solve('15a.input', X).
 %@ X = 15862900 ;
